@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class DBConnection {
 	private final static String _DRIVER = "oracle.jdbc.driver.OracleDriver";
-	private final static String _URL    = "jdbc:oracle:thin:@192.168.219.127:1521:orcl11";
+	private final static String _URL    = "jdbc:oracle:thin:@localhost:1521:orcl11";
 	private final static String _USER    = "admin";
 	private final static String _PW    = "tiger";
 

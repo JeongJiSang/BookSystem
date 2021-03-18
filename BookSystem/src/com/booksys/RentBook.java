@@ -29,7 +29,7 @@ public class RentBook extends JPanel implements ActionListener{
 	JPanel jp_south = new JPanel();
 
 	JLabel jlb_top = new JLabel("대출 도서 목록");
-
+	JButton jbtn_F5 = new JButton("새로고침");
 	String cols[] = {"일련번호", "제목", "저자", "대출일", "반납일"};
 	DefaultTableModel dtm_book = new DefaultTableModel(cols, 0); // 첫번째 data,두번째 컬럼
 	JTable jtb_book = new JTable(dtm_book);
@@ -65,10 +65,12 @@ public class RentBook extends JPanel implements ActionListener{
 		setLayout(new BorderLayout());
 
 		jp_north.add(jlb_top);
+		jp_north.add(jbtn_F5);
 		jp_north.setBackground(new Color(25, 106, 179));
 		jlb_top.setFont(new Font("굴림", Font.BOLD, 20));
 		jlb_top.setForeground(new Color(255, 255, 255));
 
+		jbtn_F5.addActionListener(this);
 		jbtn_sel.addActionListener(this);
 		jbtn_re.addActionListener(this);
 		jbtn_del.addActionListener(this);
@@ -95,8 +97,26 @@ public class RentBook extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
+		if(obj == jbtn_F5) {
+			DaoOracle dao = new DaoOracle();
+			Vector<BookVO> vecVO = new Vector<BookVO>();
+			vecVO = dao.RentAllSQL();
+
+			while(dtm_book.getRowCount() > 0) {
+				dtm_book.removeRow(0);
+			}
+			for(int i=0;i<vecVO.size();i++) {
+				Vector<Object> oneRow = new Vector<Object>();
+				oneRow.add(vecVO.get(i).getBookno());
+				oneRow.add(vecVO.get(i).getTitle());
+				oneRow.add(vecVO.get(i).getAuthor());
+				oneRow.add(vecVO.get(i).getRdate());
+				oneRow.add(vecVO.get(i).getExpdate());
+				dtm_book.addRow(oneRow);
+			}
+		}
 		// 대출도서 상세정보 버튼 눌렀을때
-		if(obj == jbtn_sel) {
+		else if(obj == jbtn_sel) {
 			Vector<BookVO> vec = null;
 			int index[] = jtb_book.getSelectedRows();
 			if(index.length==0) {//테이블의 데이터를 선택하지 않은 경우
@@ -114,12 +134,11 @@ public class RentBook extends JPanel implements ActionListener{
 				OpenView oview = new OpenView(vec);
 			}
 		}
-
 		// 반납 버튼 눌렀을때
 		else if(obj == jbtn_del){
 			int index[] = jtb_book.getSelectedRows();
 			if(index.length==0) { // 테이블의 데이터를 선택하지 않은 경우
-				JOptionPane.showMessageDialog(this, "조회할 데이터를 선택하세요","Error",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "반납할 데이터를 선택하세요","Error",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			else if(index.length > 1) { // 선택된 로우가 한 개 이상인 경우
@@ -136,10 +155,10 @@ public class RentBook extends JPanel implements ActionListener{
 			}
 		}
 		// 대출연장 버튼 눌렀을때
-		else {
+		else if(obj == jbtn_re) {
 			int index[] = jtb_book.getSelectedRows();
 			if(index.length==0) { // 테이블의 데이터를 선택하지 않은 경우
-				JOptionPane.showMessageDialog(this, "조회할 데이터를 선택하세요","Error",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "연장할 데이터를 선택하세요","Error",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			else if(index.length > 1) {//선택된 로우가 한 개 이상인 경우

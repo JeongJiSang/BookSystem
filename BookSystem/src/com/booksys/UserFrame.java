@@ -4,17 +4,13 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 public class UserFrame extends JFrame {
-	SearchBook sBook;
-	RentBook rBook;
-	JTabbedPane tabs;
+	JTabbedPane tabs = null;
 	//생성자
 	public UserFrame() {
 		tabs = new JTabbedPane(JTabbedPane.TOP);
-		sBook = new SearchBook();
-		rBook = new RentBook();
 
-		tabs.add("도서검색", sBook);
-		tabs.add("대출도서목록", rBook);
+		tabs.addTab("도서검색", new SearchBook());
+		tabs.addTab("대출도서목록", new RentBook());
 
 		add(tabs);
 

@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -33,6 +33,7 @@ public class OpenView extends JDialog implements ActionListener{
 	JTextField jtf_pubdate = new JTextField();// 발행일 
 	JLabel jlb_desc = new JLabel("책소개");	// 책소개 
 	JTextArea jta_desc = new JTextArea();  // 책소개 
+	JScrollPane jsp = new JScrollPane(jta_desc);
 	//하단
 	JPanel jp_bottom  = new JPanel();
 	JButton jbtn_close = new JButton("닫기");//닫기
@@ -41,13 +42,13 @@ public class OpenView extends JDialog implements ActionListener{
 
 
 	//생성자
-	public OpenView() {//도서 추가
+	public OpenView() {//도서 추가일때
 		jp_bottom.add(jbtn_insert);
 		initDisplay();
 
 
 	}
-	public OpenView(Vector<BookVO> vec) {//도서 조회
+	public OpenView(Vector<BookVO> vec) {//도서 조회일때 
 		jtf_bookno.setText(String.valueOf(vec.get(0).getBookno()));
 		jtf_isbn13.setText(String.valueOf(vec.get(0).getIsbn13()));
 		jtf_title.setText(vec.get(0).getTitle());
@@ -65,7 +66,7 @@ public class OpenView extends JDialog implements ActionListener{
 		initDisplay();
 
 	}
-	public OpenView(Vector<BookVO> vec, String isFlag) {//도서 수정
+	public OpenView(Vector<BookVO> vec, String isFlag) {//도서 수정일때 
 		jtf_bookno.setText(String.valueOf(vec.get(0).getBookno()));
 		jtf_isbn13.setText(String.valueOf(vec.get(0).getIsbn13()));
 		jtf_title.setText(vec.get(0).getTitle());
@@ -73,6 +74,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jtf_publisher.setText(vec.get(0).getPublisher());
 		jtf_pubdate.setText(String.valueOf(vec.get(0).getPub_date()));
 		jta_desc.setText(vec.get(0).getDesciption());
+		jtf_bookno.setEnabled(false);
 		jp_bottom.add(jbtn_update);
 		initDisplay();
 
@@ -94,7 +96,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jlb_pubdate.setBounds(70, 190, 100, 20);
 		jtf_pubdate.setBounds(150, 190, 270, 23);
 		jlb_desc.setBounds(70, 220, 100, 20);
-		jta_desc.setBounds(150, 220, 270, 40);
+		jsp.setBounds(150, 220, 270, 40);
 		jp_center.add(jlb_bookno);
 		jp_center.add(jtf_bookno);
 		jp_center.add(jlb_isbn13);
@@ -108,7 +110,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jp_center.add(jlb_pubdate);
 		jp_center.add(jtf_pubdate);
 		jp_center.add(jlb_desc);
-		jp_center.add(jta_desc);
+		jp_center.add(jsp);
 		jp_center.setBackground(Color.white);
 
 		//하단
