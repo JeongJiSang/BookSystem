@@ -138,10 +138,7 @@ public class OpenView extends JDialog implements ActionListener{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
-	//public static void main(String[] args) {
-	//	OpenView ov = new OpenView();
-	//	ov.initDisplay();
-	//}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
@@ -152,7 +149,7 @@ public class OpenView extends JDialog implements ActionListener{
 			Vector<BookVO> vec = new Vector<BookVO>();
 			BookVO bvo = new BookVO();
 			bvo.setBookno(Integer.parseInt(jtf_bookno.getText()));
-			bvo.setIsbn13(Integer.parseInt(jtf_isbn13.getText()));
+			bvo.setIsbn13(Long.parseLong(jtf_isbn13.getText()));
 			bvo.setTitle(jtf_title.getText());
 			bvo.setAuthor(jtf_author.getText());
 			bvo.setPublisher(jtf_publisher.getText());
@@ -169,7 +166,7 @@ public class OpenView extends JDialog implements ActionListener{
 			Vector<BookVO> v = new Vector<BookVO>();
 			BookVO bvo = new BookVO();
 			bvo.setBookno(Integer.parseInt(jtf_bookno.getText()));
-			bvo.setIsbn13(Integer.parseInt(jtf_isbn13.getText()));
+			bvo.setIsbn13(Long.parseLong(jtf_isbn13.getText()));
 			bvo.setTitle(jtf_title.getText());
 			bvo.setAuthor(jtf_author.getText());
 			bvo.setPublisher(jtf_publisher.getText());
@@ -179,7 +176,7 @@ public class OpenView extends JDialog implements ActionListener{
 			DaoOracle dao = new DaoOracle();
 			int result = dao.updateEndSQL(v);
 			if(result ==1) {
-				JOptionPane.showMessageDialog(this, "도서수정을 완료했습니다.");    
+				JOptionPane.showMessageDialog(this, "도서수정을 완료했습니다.");
 			}
 		}
 

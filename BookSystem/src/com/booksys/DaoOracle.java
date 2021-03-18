@@ -62,7 +62,36 @@ public class DaoOracle {
 		} catch (Exception e1) {
 			System.out.println("로그인문제");
 			e1.printStackTrace();
+		}finally {
+			dbMgr.freeConnection(con, pstmt, rs);
 		}
+	}
+	//////////////////////////////////////////////////////////
+	public Vector<BookVO> SearchSQL(String type, String search) {//도서검색 메소드
+		Vector<BookVO> vec = new Vector<BookVO>();
+		BookVO bvo = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select * from book");
+		sql.append(" where "+type+" like  ?");
+		try {
+			pstmt = con.prepareStatement(sql.toString());
+			//pstmt.setString(1, type);
+			pstmt.setString(1, "%"+search+"%");
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				bvo = new BookVO();
+				bvo.setBookno(rs.getInt("bookno"));
+				bvo.setIsbn13(rs.getLong("isbn13"));
+				bvo.setTitle(rs.getString("title"));
+				bvo.setAuthor(rs.getString("author"));
+				bvo.setPublisher(rs.getString("publisher"));
+				bvo.setRent(rs.getString("rent"));
+				vec.add(bvo);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return vec;
 	}
 	////////////////////////////////////////////////////////////
 	public Vector<BookVO> AllBookSQL() {//전체조회 메소드
@@ -85,7 +114,7 @@ public class DaoOracle {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			dbMgr.freeConnection(con, pstmt);
+			dbMgr.freeConnection(con, pstmt, rs);
 		}
 		return vec;
 	}
@@ -112,6 +141,8 @@ public class DaoOracle {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			dbMgr.freeConnection(con, pstmt, rs);
 		}
 		return vecVO;
 	}
@@ -245,7 +276,7 @@ public class DaoOracle {
 				vec.add(bvo);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}finally {
 			dbMgr.freeConnection(con, pstmt, rs);
 		}

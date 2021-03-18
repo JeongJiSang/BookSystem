@@ -86,6 +86,7 @@ public class SearchBook extends JPanel implements ActionListener{
 		jbtn_ser.setContentAreaFilled(false);
 
 		jbtn_ser.addActionListener(this);
+		jtf_ser.addActionListener(this);
 		jbtn_sel.addActionListener(this);
 		jbtn_in.addActionListener(this);
 
@@ -104,76 +105,40 @@ public class SearchBook extends JPanel implements ActionListener{
 		this.add("South",jp_south);
 	}
 
-	// 검색기능 구현
-	public void searchSQL() {  
-		DBConnection dbCon = DBConnection.getInstance();
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		// select * from book where isbn13 like '%17%';
-		String sql = "select count(*) from book where " + colName + " like ?";
-		BookVO bookVO = null;
-		String searchWord = jtf_ser.getText();
-		colName = colNames[jcb_ser.getSelectedIndex()];
-
-		try {
-			con = dbCon.getConnection();
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "%"+searchWord+"%");
-			rs = pstmt.executeQuery();
-			rs.next();
-			// titles, authors, publishers;
-			int count = rs.getInt(1);
-			isbn13s = new Long[count];
-			titles = new String[count];
-			authors = new String[count];
-			publishers = new String[count];	
-
-			sql = "select * from book where " + colName + " like ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, "%"+searchWord+"%");
-			rs = pstmt.executeQuery();
-
-			Vector<BookVO> vecVO = new Vector<BookVO>();
-			while(rs.next()) {
-				bookVO = new BookVO();
-				bookVO.setBookno(rs.getInt("bookno"));
-				bookVO.setIsbn13(rs.getLong("isbn13"));
-				bookVO.setTitle(rs.getString("title"));
-				bookVO.setAuthor(rs.getString("author"));
-				bookVO.setPublisher(rs.getString("publisher"));
-				bookVO.setRent(rs.getString("rent"));
-				vecVO.add(bookVO);
-			}
-			while(dtm_book.getRowCount() > 0) {
-				dtm_book.removeRow(0);
-			}
-
-			for(int i=0; i< vecVO.size(); i++) {
-				Vector<Object> onRow = new Vector<Object>();
-				onRow.add(vecVO.get(i).getBookno());
-				onRow.add(vecVO.get(i).getIsbn13());
-				onRow.add(vecVO.get(i).getTitle());
-				onRow.add(vecVO.get(i).getAuthor());
-				onRow.add(vecVO.get(i).getPublisher());
-				onRow.add(vecVO.get(i).getRent());
-				dtm_book.addRow(onRow);
-			}
-			if(con != null) {
-				con.close();
-			}
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		// 검색 버튼 눌렀을때
-		if(obj == jbtn_ser) {
-			searchSQL();
+		if(obj == jbtn_ser||obj == jtf_ser) {
+			String type = jcb_ser.getSelectedItem().toString();
+			Vector<BookVO> vec = null;
+			DaoOracle dao = new DaoOracle();
+			String search = jtf_ser.getText();
+			if("제목".equals(type)) {
+				type = "title";
+			}
+			else if("저자".equals(type)) {
+				type = "author";
+			}
+			else if("출판사".equals(type)) {
+				type = "publisher";
+			}
+			vec = dao.SearchSQL(type, search);
+			while(dtm_book.getRowCount() > 0) {
+				dtm_book.removeRow(0);
+			}
+
+			for(int i=0; i< vec.size(); i++) {
+				Vector<Object> onRow = new Vector<Object>();
+				onRow.add(vec.get(i).getBookno());
+				onRow.add(vec.get(i).getIsbn13());
+				onRow.add(vec.get(i).getTitle());
+				onRow.add(vec.get(i).getAuthor());
+				onRow.add(vec.get(i).getPublisher());
+				onRow.add(vec.get(i).getRent());
+				dtm_book.addRow(onRow);
+			}
 		}
 
 		// 상세정보 버튼 눌렀을때
