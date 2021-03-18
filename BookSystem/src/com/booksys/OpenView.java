@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -32,21 +33,23 @@ public class OpenView extends JDialog implements ActionListener{
 	JTextField jtf_pubdate = new JTextField();// 발행일 
 	JLabel jlb_desc = new JLabel("책소개");	// 책소개 
 	JTextArea jta_desc = new JTextArea();  // 책소개 
+	JScrollPane jsp = new JScrollPane(jta_desc);
+	
 	//하단
 	JPanel jp_bottom  = new JPanel();
-	JButton jbtn_close = new JButton("닫기");//닫기
-	JButton jbtn_insert = new JButton("추가");//추가
-	JButton jbtn_update = new JButton("수정");//수정
+	JButton jbtn_close = new JButton("닫기"); // 닫기
+	JButton jbtn_insert = new JButton("추가"); // 추가
+	JButton jbtn_update = new JButton("수정"); // 수정
 
 
 	//생성자
-	public OpenView() {//도서 추가
+	public OpenView() { // 도서 추가
 		jp_bottom.add(jbtn_insert);
 		initDisplay();
 
 
 	}
-	public OpenView(Vector<BookVO> vec) {//도서 조회
+	public OpenView(Vector<BookVO> vec) { // 도서 조회
 		jtf_bookno.setText(String.valueOf(vec.get(0).getBookno()));
 		jtf_isbn13.setText(String.valueOf(vec.get(0).getIsbn13()));
 		jtf_title.setText(vec.get(0).getTitle());
@@ -93,7 +96,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jlb_pubdate.setBounds(70, 190, 100, 20);
 		jtf_pubdate.setBounds(150, 190, 270, 23);
 		jlb_desc.setBounds(70, 220, 100, 20);
-		jta_desc.setBounds(150, 220, 270, 40);
+		jsp.setBounds(150, 220, 270, 40);
 		jp_center.add(jlb_bookno);
 		jp_center.add(jtf_bookno);
 		jp_center.add(jlb_isbn13);
@@ -107,7 +110,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jp_center.add(jlb_pubdate);
 		jp_center.add(jtf_pubdate);
 		jp_center.add(jlb_desc);
-		jp_center.add(jta_desc);
+		jp_center.add(jsp);
 		jp_center.setBackground(Color.white);
 
 		//하단
@@ -124,10 +127,8 @@ public class OpenView extends JDialog implements ActionListener{
 		jbtn_update.setFont(new Font("굴림", Font.BOLD, 17));
 		jbtn_update.setForeground(new Color(255, 255, 255));
 
-
 		jp_bottom.setBackground(Color.white);
 		jp_bottom.add(jbtn_close);
-
 
 		//프레임
 		this.add("Center", jp_center);
@@ -138,17 +139,14 @@ public class OpenView extends JDialog implements ActionListener{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
-	//public static void main(String[] args) {
-	//	OpenView ov = new OpenView();
-	//	ov.initDisplay();
-	//}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if(obj == jbtn_close) {//닫기
+		if(obj == jbtn_close) { // 닫기
 			this.dispose();
 		}
-		else if(obj == jbtn_insert) {//도서 추가
+		else if(obj == jbtn_insert) { // 도서 추가
 			Vector<BookVO> vec = new Vector<BookVO>();
 			BookVO bvo = new BookVO();
 			bvo.setBookno(Integer.parseInt(jtf_bookno.getText()));
@@ -162,10 +160,12 @@ public class OpenView extends JDialog implements ActionListener{
 			DaoOracle dao = new DaoOracle();
 			int result = dao.insertSQL(vec);
 			if(result ==1) {
-				JOptionPane.showMessageDialog(this, "도서추가를 완료했습니다.");    
+				JOptionPane.showMessageDialog(this, "도서추가를 완료했습니다."); 
+				this.dispose();
 			}
 		}
-		else if(obj == jbtn_update) {//도서 수정
+		
+		else if(obj == jbtn_update) { // 도서 수정
 			Vector<BookVO> v = new Vector<BookVO>();
 			BookVO bvo = new BookVO();
 			bvo.setBookno(Integer.parseInt(jtf_bookno.getText()));
@@ -179,7 +179,8 @@ public class OpenView extends JDialog implements ActionListener{
 			DaoOracle dao = new DaoOracle();
 			int result = dao.updateEndSQL(v);
 			if(result ==1) {
-				JOptionPane.showMessageDialog(this, "도서수정을 완료했습니다.");    
+				JOptionPane.showMessageDialog(this, "도서수정을 완료했습니다.");  
+				this.dispose();
 			}
 		}
 
