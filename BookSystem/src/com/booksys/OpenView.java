@@ -85,6 +85,7 @@ public class OpenView extends JDialog implements ActionListener{
 		jp_center.setLayout(null);
 		jlb_bookno.setBounds(70, 40, 100, 20);
 		jtf_bookno.setBounds(150, 40, 270, 23);
+		jtf_bookno.setBackground(Color.white);
 		jlb_isbn13.setBounds(70, 70, 100, 20);
 		jtf_isbn13.setBounds(150, 70, 270, 23);
 		jlb_title.setBounds(70, 100, 100, 20);
